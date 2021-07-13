@@ -18,6 +18,7 @@ public class DisplayCoOrdinateSystem : MonoBehaviour
         AwakeFunctions();
     }
 
+    //Awake Function functionality
     void AwakeFunctions()
     {
         coLabel = GetComponent<TextMeshPro>();
@@ -44,6 +45,7 @@ public class DisplayCoOrdinateSystem : MonoBehaviour
         coLabel.text = getLocation.x + "," + getLocation.y;
     }
 
+    //display the name of the object
     void DisplayOBJName()
     {
         transform.parent.name = getLocation.ToString();

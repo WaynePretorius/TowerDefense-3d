@@ -9,7 +9,8 @@ public class EnemyMover : MonoBehaviour
 
     //variables used to change the speed of the enemy
     [Header("Speed Settings")]
-    [SerializeField] float timeToNextmove = 1f;
+    [SerializeField][Range(0f, 10f)] float enemySpeed = 1f;
+    private float lerpStart = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -17,20 +18,26 @@ public class EnemyMover : MonoBehaviour
        StartCoroutine(DisplayPath());
     }
 
-    //Displays the pathe that the enemy will take in the console
+    //Let the enemy move from one tile to the next as set in the list
    IEnumerator DisplayPath()
     {
         foreach(Waypoint waypoint in path)
         {
-            print(waypoint.name);
-            FollowPath(waypoint);
-            yield return new WaitForSeconds(timeToNextmove);
+            Vector3 startPos = transform.position;
+            Vector3 endPos = waypoint.transform.position;
+            float travelpercent = lerpStart;
+
+            transform.LookAt(endPos);
+
+            while (travelpercent < 1)
+            {
+                travelpercent += Time.deltaTime * enemySpeed;
+                transform.position = Vector3.Lerp(startPos, endPos, travelpercent);
+
+                yield return new WaitForEndOfFrame();
+            }
         }
     }
 
-    //get the enemy to move from current pathe to new path
-    void FollowPath(Waypoint newPos)
-    {    
-        transform.position = newPos.transform.position;
-    }
+    
 }
