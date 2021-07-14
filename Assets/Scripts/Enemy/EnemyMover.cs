@@ -13,9 +13,30 @@ public class EnemyMover : MonoBehaviour
     private float lerpStart = 0f;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
+       FindPath();
+       StartPoint();
        StartCoroutine(DisplayPath());
+    }
+
+    //finds the waypoints tagged as the path and stores them in the list
+    private void FindPath()
+    {
+        path.Clear();
+
+        GameObject[] currentPath = GameObject.FindGameObjectsWithTag(Tags.TAGS_PATH);
+
+        foreach(GameObject waypoint in currentPath)
+        {
+            path.Add(waypoint.GetComponent<Waypoint>());
+        }
+
+    }
+
+    private void StartPoint()
+    {
+        transform.position = path[0].transform.position;
     }
 
     //Let the enemy move from one tile to the next as set in the list
@@ -37,7 +58,13 @@ public class EnemyMover : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
         }
+
+        EndOfLine();
     }
 
-    
+    //Runs all function once the enemy finds it path to the end
+   private void EndOfLine()
+    {
+        gameObject.SetActive(false);
+    }
 }

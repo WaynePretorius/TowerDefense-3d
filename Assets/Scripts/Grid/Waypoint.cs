@@ -9,6 +9,16 @@ public class Waypoint : MonoBehaviour
     [SerializeField] private GameObject playerTower;
     private GameObject parent;
 
+    //states of the object
+    [Header("Waypoint Settings")]
+    [SerializeField] private bool canPlace;
+
+    //Encapsulation functions
+    public bool CanPlace
+    {
+        get{return canPlace;}
+    }
+
     //first function that gets called as soon as the script is in the game
     private void Awake()
     {
@@ -21,20 +31,21 @@ public class Waypoint : MonoBehaviour
         parent = GameObject.FindGameObjectWithTag(Tags.TAGS_PARENT);
     }
 
-    //states of the object
-    [Header("Waypoint Settings")]
-    [SerializeField] private bool canPlace;
-
     //when the player clicks on the grid
     private void OnMouseDown()
+    {
+        PlaceTower();
+    }
+
+    private void PlaceTower()
     {
         if (canPlace)
         {
             canPlace = false;
-            if (playerTower == null) 
+            if (playerTower == null)
             {
                 Debug.LogWarning("No Tower Prefab added.");
-                    return; 
+                return;
             }
             GameObject ballista = Instantiate(playerTower, transform.position, Quaternion.identity);
             ballista.transform.parent = parent.transform;

@@ -4,34 +4,71 @@ using UnityEngine;
 
 public class Ballista : MonoBehaviour
 {
+    //variables declared
+    [Header("Turret variable")]
+    [SerializeField] private float turretRange = 15f;
 
     //chached objects
+    [Header("Gameobjects Needed")]
     [SerializeField] private Transform weapon;
-    private Transform enemy;
-    private GameObject parent;
+    [SerializeField] private ParticleSystem projectile;
+    private Transform enemyPosition;
 
-    //first function when the class comes into polay
     private void Awake()
     {
-        enemy = GameObject.FindObjectOfType<EnemyMover>().transform;
-        parent = GameObject.FindGameObjectWithTag(Tags.TAGS_PARENT);
+        enemyPosition = FindObjectOfType<Enemy>().transform;
     }
 
     //update every frame
     private void Update()
     {
+        FindClosestTarget();
         AimTurret();
     }
 
-    //look at the enemy
+    //finds the closest target to the turret
+    private void FindClosestTarget()
+    {
+        Enemy[] enemies = FindObjectsOfType<Enemy>();
+        Transform closestTarget = null;
+        float maxDistance = Mathf.Infinity;
+
+        foreach (Enemy enemy in enemies)
+        {
+            float targetDistance = Vector3.Distance(transform.position, enemy.transform.position);
+
+            if (targetDistance < maxDistance)
+            {
+                closestTarget = enemy.transform;
+                maxDistance = targetDistance;
+            }
+        }
+
+        enemyPosition = closestTarget;
+    }
+
+    //look at the closest enemy and attack if they are in range
     private void AimTurret()
     {
-        if(weapon == null)
+        float maxDistance = Vector3.Distance(transform.position, enemyPosition.position);
+
+        weapon.transform.LookAt(enemyPosition);
+
+        if(maxDistance < turretRange)
         {
-            Debug.LogWarning("No TurretTop assigned");
-            return;
+            Attack(true);
         }
-        weapon.transform.LookAt(enemy.transform);
+        else
+        {
+            Attack(false);
+        }
+    }
+
+    //enable or disable the turret attacking
+    private void Attack(bool canAttack)
+    {
+        var emmissionState = projectile.emission;
+        emmissionState.enabled = canAttack;
     }
 
 }

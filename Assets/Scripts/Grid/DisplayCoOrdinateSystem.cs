@@ -6,11 +6,19 @@ using TMPro;
 [ExecuteAlways]
 public class DisplayCoOrdinateSystem : MonoBehaviour
 {
-    //references for objects
-    TextMeshPro coLabel;
 
     //variables used for the co-ordinates
-    Vector2Int getLocation = new Vector2Int();
+    [Header("Text Color Settings")]
+    [SerializeField] Color defaultColor = Color.black;
+    [SerializeField] Color blockedColor = Color.red;
+    private Vector2Int getLocation = new Vector2Int();
+
+    //references for objects
+    private TextMeshPro coLabel;
+    private Waypoint waypoint;
+
+    //states of the class
+    [SerializeField] private bool canShow = false;
 
     // Start is called before the first frame update
     void Awake()
@@ -22,16 +30,36 @@ public class DisplayCoOrdinateSystem : MonoBehaviour
     void AwakeFunctions()
     {
         coLabel = GetComponent<TextMeshPro>();
+        waypoint = GetComponentInParent<Waypoint>();
         DisplayCoOrdinates();
+        if (Application.isPlaying)
+        {
+            coLabel.enabled = canShow;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        CheckIfCoordinatesCanShow();
+        ChangeTextColorNonPlaceableTile();
+    }
+
+    //Sees if the co-ordiantes can show
+    private void CheckIfCoordinatesCanShow()
+    {
         if (!Application.isPlaying)
         {
             DisplayCoOrdinates();
             DisplayOBJName();
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                canShow = !canShow;
+                CanShowInPlayMode();            
+            }
         }
     }
 
@@ -49,5 +77,38 @@ public class DisplayCoOrdinateSystem : MonoBehaviour
     void DisplayOBJName()
     {
         transform.parent.name = getLocation.ToString();
+    }
+
+    //enables or disable the co-ordinates during playtime
+    private void CanShowInPlayMode()
+    {
+        if (canShow)
+        {
+            coLabel.enabled = true;
+            DisplayCoOrdinates();
+            DisplayOBJName();
+        }
+        else
+        {
+            coLabel.enabled = false;
+        }
+    }
+
+    //chamges the color of the text if the object can not be used
+    private void ChangeTextColorNonPlaceableTile()
+    {
+        if (Application.isPlaying)
+        {
+            bool isPlaceable = waypoint.CanPlace;
+
+            if (isPlaceable)
+            {
+                coLabel.color = defaultColor;
+            }
+            else
+            {
+                coLabel.color = blockedColor;
+            }
+        }
     }
 }

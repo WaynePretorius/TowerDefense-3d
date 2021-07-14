@@ -6,9 +6,14 @@ public class EnemyHitPoints : MonoBehaviour
 {
     //variables declared
     [Header("Enemy Hit Points Settings")]
-    [SerializeField] private int hitPoints = 50;
+    [SerializeField] private int maxHP = 50;
     [SerializeField] private int damage = 10;
+    private int hitPoints = 50;
 
+    private void OnEnable()
+    {
+        hitPoints = maxHP;
+    }
 
     //when anything collides with the enemy
     private void OnParticleCollision(GameObject other)
@@ -28,7 +33,7 @@ public class EnemyHitPoints : MonoBehaviour
     {
         if (hitPoints <= 0)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

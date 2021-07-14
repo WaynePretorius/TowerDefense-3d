@@ -208,7 +208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8fff9eee02e2864db32f750172d2218, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turretRange: 15
   weapon: {fileID: 5155939055439236906}
+  projectile: {fileID: 275451366798702768}
 --- !u!1 &8743866872098451549
 GameObject:
   m_ObjectHideFlags: 0
@@ -3990,14 +3992,14 @@ ParticleSystem:
         m_RotationOrder: 4
     minKillSpeed: 0
     maxKillSpeed: 10000
-    radiusScale: 1
+    radiusScale: 0.3
     collidesWith:
       serializedVersion: 2
       m_Bits: 4294967295
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
-    collisionMessages: 0
+    collisionMessages: 1
     collidesWithDynamic: 1
     interiorCollisions: 0
   TriggerModule:

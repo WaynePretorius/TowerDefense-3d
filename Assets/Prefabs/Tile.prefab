@@ -264,6 +264,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b101b27806c2a4419af61a4cd3e34f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultColor: {r: 0, g: 0, b: 0, a: 1}
+  blockedColor: {r: 1, g: 0.7028302, b: 0.7028302, a: 1}
+  canShow: 0
 --- !u!1 &8226570012863215910
 GameObject:
   m_ObjectHideFlags: 0
