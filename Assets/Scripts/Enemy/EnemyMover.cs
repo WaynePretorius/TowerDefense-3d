@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Enemy))]
 public class EnemyMover : MonoBehaviour
 {
     //List where all waypoints are stored for the enemy to follow;
+    [Header("Waypoints stored for fixed Wapoints")]
     [SerializeField] List<Waypoint> path = new List<Waypoint>();
 
     //variables used to change the speed of the enemy
@@ -12,12 +14,28 @@ public class EnemyMover : MonoBehaviour
     [SerializeField][Range(0f, 10f)] float enemySpeed = 1f;
     private float lerpStart = 0f;
 
+    //chached References
+    private Enemy changeCurrency;
+
     // Start is called before the first frame update
     void OnEnable()
     {
-       FindPath();
-       StartPoint();
-       StartCoroutine(DisplayPath());
+        CachedReferences();
+        EnableFuntions();
+    }
+
+    //references cached to the class
+    private void CachedReferences()
+    {
+        changeCurrency = GetComponent<Enemy>();
+    }
+
+    //functions that gets called as the class is enabled
+    private void EnableFuntions()
+    {
+        FindPath();
+        StartPoint();
+        StartCoroutine(DisplayPath());
     }
 
     //finds the waypoints tagged as the path and stores them in the list
@@ -25,15 +43,21 @@ public class EnemyMover : MonoBehaviour
     {
         path.Clear();
 
-        GameObject[] currentPath = GameObject.FindGameObjectsWithTag(Tags.TAGS_PATH);
+        GameObject pathParent = GameObject.FindGameObjectWithTag(Tags.TAGS_PATH);
 
-        foreach(GameObject waypoint in currentPath)
+        foreach(Transform childTransform in pathParent.transform)
         {
-            path.Add(waypoint.GetComponent<Waypoint>());
+            Waypoint waypoint = childTransform.GetComponent<Waypoint>();
+
+            if (waypoint != null)
+            {
+                path.Add(waypoint);
+            }
         }
 
     }
 
+    //get the startposition where the enemies must spawn
     private void StartPoint()
     {
         transform.position = path[0].transform.position;
@@ -66,5 +90,6 @@ public class EnemyMover : MonoBehaviour
    private void EndOfLine()
     {
         gameObject.SetActive(false);
+        changeCurrency.DeductCurrency();
     }
 }

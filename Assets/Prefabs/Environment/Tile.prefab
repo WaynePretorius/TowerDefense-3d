@@ -314,7 +314,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTower: {fileID: 4648717274312462400, guid: ce57e07ac4d089b46ae43b48db02220a, type: 3}
+  towerCost: {fileID: 406898379294402996, guid: ce57e07ac4d089b46ae43b48db02220a, type: 3}
   canPlace: 0
+  haveEnoughMoney: 0
 --- !u!65 &2062031075814959763
 BoxCollider:
   m_ObjectHideFlags: 0

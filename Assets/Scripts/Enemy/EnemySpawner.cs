@@ -6,14 +6,16 @@ public class EnemySpawner : MonoBehaviour
 {
     //variables declared
     [Header("Enemy Spawner Settings")]
-    [SerializeField] private float timeToSpawn = 1f;
-    [SerializeField] private int enemyPoolSize = 10;
+    [Tooltip("Range between 1 and 7 seconds before next enemy spawns")]
+    [SerializeField] [Range(1f,7f)] private float timeToSpawn = 1f;
+    [SerializeField] [Range(1,20)] private int enemyPoolSize = 10;
 
     //cached references
     [Header("Enemies to respawn")]
     [SerializeField] private GameObject enemy;
     private GameObject[] enemyPool;
 
+    //first function that is called as soon as the gameobject comes into play
     private void Awake()
     {
         PopulatePool();

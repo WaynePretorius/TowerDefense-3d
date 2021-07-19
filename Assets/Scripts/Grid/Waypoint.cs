@@ -7,11 +7,15 @@ public class Waypoint : MonoBehaviour
     //cached regerences for the towers
     [Header("Instantiate Towers")]
     [SerializeField] private GameObject playerTower;
+    [SerializeField] private Ballista towerCost;
     private GameObject parent;
+    private CurrencyKeeper bank;
+
 
     //states of the object
     [Header("Waypoint Settings")]
     [SerializeField] private bool canPlace;
+    [SerializeField] private bool haveEnoughMoney;
 
     //Encapsulation functions
     public bool CanPlace
@@ -29,6 +33,7 @@ public class Waypoint : MonoBehaviour
     private void AwakeFunctions()
     {
         parent = GameObject.FindGameObjectWithTag(Tags.TAGS_PARENT);
+        bank = FindObjectOfType<CurrencyKeeper>();
     }
 
     //when the player clicks on the grid
@@ -37,18 +42,29 @@ public class Waypoint : MonoBehaviour
         PlaceTower();
     }
 
+    //function that check if the tower can be placed
     private void PlaceTower()
     {
-        if (canPlace)
+        CheckBalance();
+        if (canPlace && haveEnoughMoney)
         {
             canPlace = false;
-            if (playerTower == null)
-            {
-                Debug.LogWarning("No Tower Prefab added.");
-                return;
-            }
             GameObject ballista = Instantiate(playerTower, transform.position, Quaternion.identity);
             ballista.transform.parent = parent.transform;
+            bank.DeductBalanceValue(towerCost.TowerCost);
+        }
+    }
+
+    //function that checks if there is enough cash in the bank
+    private void CheckBalance()
+    {
+        if(bank.CurrentBalance >= towerCost.TowerCost)
+        {
+            haveEnoughMoney = true;
+        }
+        else
+        {
+            haveEnoughMoney = false;
         }
     }
 }

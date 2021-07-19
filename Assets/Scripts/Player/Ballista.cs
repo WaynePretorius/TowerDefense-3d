@@ -7,6 +7,7 @@ public class Ballista : MonoBehaviour
     //variables declared
     [Header("Turret variable")]
     [SerializeField] private float turretRange = 15f;
+    [SerializeField] private int towerCost = 100;
 
     //chached objects
     [Header("Gameobjects Needed")]
@@ -14,6 +15,10 @@ public class Ballista : MonoBehaviour
     [SerializeField] private ParticleSystem projectile;
     private Transform enemyPosition;
 
+    //getters and setter
+    public int TowerCost { get { return towerCost; } }
+
+    //first function that caomes into play as soon as the class is activated
     private void Awake()
     {
         enemyPosition = FindObjectOfType<Enemy>().transform;

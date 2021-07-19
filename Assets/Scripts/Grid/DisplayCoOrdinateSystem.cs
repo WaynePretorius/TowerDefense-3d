@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 //execute in editor and in play mode
 [ExecuteAlways]
+[RequireComponent(typeof(TextMeshPro))]
 public class DisplayCoOrdinateSystem : MonoBehaviour
 {
 
