@@ -12,11 +12,14 @@ public class DisplayCoOrdinateSystem : MonoBehaviour
     [Header("Text Color Settings")]
     [SerializeField] Color defaultColor = Color.black;
     [SerializeField] Color blockedColor = Color.red;
+    [SerializeField] Color exploredColor = Color.blue;
+    [SerializeField] Color pathColor = Color.white;
+
     private Vector2Int getLocation = new Vector2Int();
 
     //references for objects
     private TextMeshPro coLabel;
-    private Waypoint waypoint;
+    private Gridmanager gridmanager;
 
     //states of the class
     [SerializeField] private bool canShow = false;
@@ -31,7 +34,7 @@ public class DisplayCoOrdinateSystem : MonoBehaviour
     void AwakeFunctions()
     {
         coLabel = GetComponent<TextMeshPro>();
-        waypoint = GetComponentInParent<Waypoint>();
+        gridmanager = FindObjectOfType<Gridmanager>();
         DisplayCoOrdinates();
         if (Application.isPlaying)
         {
@@ -43,7 +46,7 @@ public class DisplayCoOrdinateSystem : MonoBehaviour
     void Update()
     {
         CheckIfCoordinatesCanShow();
-        ChangeTextColorNonPlaceableTile();
+        ChangeColorForLabel();
     }
 
     //Sees if the co-ordiantes can show
@@ -96,20 +99,47 @@ public class DisplayCoOrdinateSystem : MonoBehaviour
     }
 
     //chamges the color of the text if the object can not be used
-    private void ChangeTextColorNonPlaceableTile()
+    private void ChangeColorForLabel()
     {
         if (Application.isPlaying)
         {
-            bool isPlaceable = waypoint.CanPlace;
+            if (gridmanager == null)
+            {
+                return;
+            }
 
-            if (isPlaceable)
-            {
-                coLabel.color = defaultColor;
-            }
-            else
-            {
-                coLabel.color = blockedColor;
-            }
+            CheckToSeeWhatColor();
         }
+    }
+
+    //see what the color of the text will be
+    private void CheckToSeeWhatColor()
+    {
+        Node node = gridmanager.GetNode(getLocation);
+
+        if(node == null) { return; }
+
+        if (!node.isWalkable)
+        {
+            SetColor(blockedColor);
+        }
+        else if (node.isPath)
+        {
+            SetColor(pathColor);
+        }
+        else if (node.isExplored)
+        {
+            SetColor(exploredColor);
+        }
+        else
+        {
+            SetColor(defaultColor);
+        }
+    }
+
+    //changes the color of the text
+    private void SetColor(Color color)
+    {
+        coLabel.color = color;
     }
 }
