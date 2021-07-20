@@ -12,7 +12,7 @@ public class Node
     public bool isExplored;
     public bool isPath;
 
-    public Node nodes;
+    public Node connectNode;
 
     //constructor to get the position of the node, and see if the enemy can move to the node
     public Node(Vector2Int coordinates, bool isWalkable)

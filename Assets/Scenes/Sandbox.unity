@@ -2131,6 +2131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: {x: 9, y: 5}
+  unityGridSize: 10
 --- !u!4 &733101397 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2490360398272109105, guid: 9db30d42db565d748a23aab1c77f94e3, type: 3}
@@ -5619,9 +5620,37 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2189597169571873217, guid: e815244e69448474fb79a719477a5a93, type: 3}
+      propertyPath: endCoordinates.x
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189597169571873217, guid: e815244e69448474fb79a719477a5a93, type: 3}
+      propertyPath: endCoordinates.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189597169571873217, guid: e815244e69448474fb79a719477a5a93, type: 3}
+      propertyPath: startCoordinates.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189597169571873217, guid: e815244e69448474fb79a719477a5a93, type: 3}
+      propertyPath: startCoordinates.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189597169571873217, guid: e815244e69448474fb79a719477a5a93, type: 3}
+      propertyPath: currentSearchNode.coordinates.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189597169571873217, guid: e815244e69448474fb79a719477a5a93, type: 3}
+      propertyPath: currentSearchNode.coordinates.y
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2389641815678416104, guid: e815244e69448474fb79a719477a5a93, type: 3}
       propertyPath: m_Name
       value: EnemySpawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389641815678416105, guid: e815244e69448474fb79a719477a5a93, type: 3}
+      propertyPath: enemyPoolSize
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2389641815678416106, guid: e815244e69448474fb79a719477a5a93, type: 3}
       propertyPath: m_RootOrder

@@ -56,7 +56,9 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\FindPath\Gridmanager.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyHitPoints.cs" />
+    <Compile Include="Assets\Scripts\FindPath\Node.cs" />
     <Compile Include="Assets\Scripts\Managers\CurrencyKeeper.cs" />
     <Compile Include="Assets\Scripts\Tags.cs" />
     <Compile Include="Assets\Scripts\Player\Ballista.cs" />
@@ -65,8 +67,7 @@
     <Compile Include="Assets\Scripts\Enemy\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyMover.cs" />
     <Compile Include="Assets\Scripts\Grid\Waypoint.cs" />
-    <Compile Include="Assets\Scripts\FindPath\Node.cs" />
-    <Compile Include="Assets\Scripts\FindPath\Gridmanager.cs" />
+    <Compile Include="Assets\Scripts\FindPath\NavigateNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

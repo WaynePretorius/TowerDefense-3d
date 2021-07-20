@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class Waypoint : MonoBehaviour
 {
-    //cached regerences for the towers
+
+    //variables declared for use
+    private Vector2Int coordinates = new Vector2Int();
+
+    //cached references
     [Header("Instantiate Towers")]
     [SerializeField] private GameObject playerTower;
     [SerializeField] private Ballista towerCost;
     private GameObject parent;
     private CurrencyKeeper bank;
+    private Gridmanager gridManager;
 
 
     //states of the object
@@ -34,6 +39,29 @@ public class Waypoint : MonoBehaviour
     {
         parent = GameObject.FindGameObjectWithTag(Tags.TAGS_PARENT);
         bank = FindObjectOfType<CurrencyKeeper>();
+        gridManager = FindObjectOfType<Gridmanager>();
+    }
+
+    //method that runs at the first frame 
+    private void Start()
+    {
+        SetGridNotWalkable();
+    }
+
+    //If the current tile can not be placed on, make it not walkable in the grid
+    private void SetGridNotWalkable()
+    {
+        if(gridManager != null)
+        {
+            Vector3 myPosition = transform.position;
+
+            coordinates = gridManager.GetCoordinatesFromPosition(myPosition);
+
+            if (!canPlace)
+            {
+                gridManager.BlockNode(coordinates);
+            }
+        }
     }
 
     //when the player clicks on the grid

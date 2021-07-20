@@ -70,9 +70,10 @@ public class DisplayCoOrdinateSystem : MonoBehaviour
     //display the co-ordinate system on the tiles
     void DisplayCoOrdinates()
     {
+        if(gridmanager == null) { return; }
         //get the 2d vector to two display it, mnote, 3d uses the z position as the y position
-        getLocation.x = Mathf.RoundToInt(transform.parent.position.x / UnityEditor.EditorSnapSettings.move.x);
-        getLocation.y = Mathf.RoundToInt(transform.parent.position.z / UnityEditor.EditorSnapSettings.move.z);
+        getLocation.x = Mathf.RoundToInt(transform.parent.position.x / gridmanager.UnityGridSize);
+        getLocation.y = Mathf.RoundToInt(transform.parent.position.z / gridmanager.UnityGridSize);
 
         coLabel.text = getLocation.x + "," + getLocation.y;
     }
