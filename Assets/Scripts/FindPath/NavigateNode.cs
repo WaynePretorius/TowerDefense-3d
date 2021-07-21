@@ -9,6 +9,10 @@ public class NavigateNode : MonoBehaviour
     [SerializeField] private Vector2Int startCoordinates;
     [SerializeField] private Vector2Int endCoordinates;
 
+    //properties for the variables declared(encapsulation)
+    public Vector2Int StartCoordinates { get { return startCoordinates; } }
+    public Vector2Int EndCoordinates { get { return endCoordinates; } }
+
     //cashed references
     private Node startNode;
     private Node endNode;
@@ -33,27 +37,38 @@ public class NavigateNode : MonoBehaviour
         gridManager = FindObjectOfType<Gridmanager>();
         if(gridManager != null)
         {
-            grid = gridManager.Grid;
+            GridSettings();
         }
 
+    }
+
+    //set the dictionary of the grid to gridmanager and set up the start and enpoints of the grid.
+    private void GridSettings()
+    {
+        grid = gridManager.Grid;
+        startNode = grid[startCoordinates];
+        endNode = grid[endCoordinates];
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        StartUpFunctions();
-        BreadthFirstSearch();
-        BuildPath();
+        FindNewPath();
     }
 
-    //function that will be processed after everything else has been instantiated when the game start
-    private void StartUpFunctions()
+    //Finds and builds the new path after an obstruction has been set in place
+    public List<Node> FindNewPath()
     {
-
-        startNode = gridManager.Grid[startCoordinates];
-        endNode = gridManager.Grid[endCoordinates];
+        return FindNewPath(startCoordinates);
     }
 
+    //method overload, needs coordinates of where the original doesnt
+    public List<Node> FindNewPath(Vector2Int coordinates)
+    {
+        gridManager.ResetNodes();
+        BreadthFirstSearch(coordinates);
+        return BuildPath();
+    }
     //Function that looks for the neighbouring nodes and stores it in a list
     private void LookForNeighbourNode()
     {
@@ -83,12 +98,18 @@ public class NavigateNode : MonoBehaviour
     }
 
     //function that will loop through the tiles and see what path will run best to the end destination
-    private void BreadthFirstSearch()
+    private void BreadthFirstSearch(Vector2Int coordinates)
     {
+        startNode.isWalkable = true;
+        endNode.isWalkable = true;
+
+        nodeQueu.Clear();
+        reached.Clear();
+
         bool isSearching = true;
 
-        nodeQueu.Enqueue(startNode);
-        reached.Add(startCoordinates, startNode);
+        nodeQueu.Enqueue(grid[coordinates]);
+        reached.Add(coordinates, grid[coordinates]);
 
         while(nodeQueu.Count > 0 && isSearching)
         {
@@ -121,5 +142,31 @@ public class NavigateNode : MonoBehaviour
         path.Reverse();
 
         return path;
+    }
+
+    //returns true or false depending if a new obstruction has been placed on the tiles
+    public bool WillBlockPath(Vector2Int coordinates)
+    {
+        if (grid.ContainsKey(coordinates))
+        {
+            bool previousState = grid[coordinates].isWalkable;
+            grid[coordinates].isWalkable = false;
+            List<Node> newPath = FindNewPath();
+            grid[coordinates].isWalkable = previousState;
+
+            if (newPath.Count <= 1)
+            {
+                FindNewPath();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //calls to all to say recalculate path, if they can they will, otherwise, it just send the message, even if there is no recievers
+    public void NotifyRecievers()
+    {
+        BroadcastMessage(Tags.METHOD_RECALCULATE, false, SendMessageOptions.DontRequireReceiver);
     }
 }

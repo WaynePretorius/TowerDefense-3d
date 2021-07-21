@@ -15,6 +15,7 @@ public class Waypoint : MonoBehaviour
     private GameObject parent;
     private CurrencyKeeper bank;
     private Gridmanager gridManager;
+    private NavigateNode pathFinder;
 
 
     //states of the object
@@ -40,6 +41,7 @@ public class Waypoint : MonoBehaviour
         parent = GameObject.FindGameObjectWithTag(Tags.TAGS_PARENT);
         bank = FindObjectOfType<CurrencyKeeper>();
         gridManager = FindObjectOfType<Gridmanager>();
+        pathFinder = FindObjectOfType<NavigateNode>();
     }
 
     //method that runs at the first frame 
@@ -67,19 +69,20 @@ public class Waypoint : MonoBehaviour
     //when the player clicks on the grid
     private void OnMouseDown()
     {
-        PlaceTower();
+        CheckIfTowerCanBePlaced();
     }
 
     //function that check if the tower can be placed
-    private void PlaceTower()
+    private void CheckIfTowerCanBePlaced()
     {
+        bool canGridContain = gridManager.GetNode(coordinates).isWalkable;
+        bool pathIsBlocked = pathFinder.WillBlockPath(coordinates);
+
         CheckBalance();
-        if (canPlace && haveEnoughMoney)
+        if (canGridContain && !pathIsBlocked)
         {
-            canPlace = false;
-            GameObject ballista = Instantiate(playerTower, transform.position, Quaternion.identity);
-            ballista.transform.parent = parent.transform;
-            bank.DeductBalanceValue(towerCost.TowerCost);
+            InstantiateTower();
+            gridManager.BlockNode(coordinates);
         }
     }
 
@@ -93,6 +96,18 @@ public class Waypoint : MonoBehaviour
         else
         {
             haveEnoughMoney = false;
+        }
+    }
+
+    //instantiates the tower
+    private void InstantiateTower()
+    {
+        if (haveEnoughMoney && CanPlace)
+        {
+            canPlace = false;
+            GameObject ballista = Instantiate(playerTower, transform.position, Quaternion.identity);
+            ballista.transform.parent = parent.transform;
+            bank.DeductBalanceValue(towerCost.TowerCost);
         }
     }
 }

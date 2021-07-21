@@ -76,4 +76,15 @@ public class Gridmanager : MonoBehaviour
 
         return position;
     }
+
+    //resets all the nodes so that a new path can be found if the old one is obstructed
+    public void ResetNodes()
+    {
+        foreach(KeyValuePair<Vector2Int, Node> entry in grid)
+        {
+            entry.Value.connectNode = null;
+            entry.Value.isExplored = false;
+            entry.Value.isPath = false;
+        }
+    }
 }

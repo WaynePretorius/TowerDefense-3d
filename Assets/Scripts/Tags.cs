@@ -6,4 +6,7 @@ public static class Tags
     public static string TAGS_ENEMY = "Enemy";
     public static string TAGS_PROJECTILE = "Projectile";
     public static string TAGS_PATH = "Path";
+
+    //Methods
+    public static string METHOD_RECALCULATE = "RecalculatePath";
 }

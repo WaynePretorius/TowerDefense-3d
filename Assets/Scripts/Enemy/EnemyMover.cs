@@ -6,8 +6,7 @@ using UnityEngine;
 public class EnemyMover : MonoBehaviour
 {
     //List where all waypoints are stored for the enemy to follow;
-    [Header("Waypoints stored for fixed Wapoints")]
-    [SerializeField] List<Waypoint> path = new List<Waypoint>();
+    [SerializeField] List<Node> path = new List<Node>();
 
     //variables used to change the speed of the enemy
     [Header("Speed Settings")]
@@ -16,11 +15,17 @@ public class EnemyMover : MonoBehaviour
 
     //chached References
     private Enemy changeCurrency;
+    private Gridmanager gridManager;
+    private NavigateNode pathFinder;
 
+    //first function that is called as soon as the object comes into play
+    private void Awake()
+    {
+        CachedReferences();
+    }
     // Start is called before the first frame update
     void OnEnable()
     {
-        CachedReferences();
         EnableFuntions();
     }
 
@@ -28,48 +33,60 @@ public class EnemyMover : MonoBehaviour
     private void CachedReferences()
     {
         changeCurrency = GetComponent<Enemy>();
+        gridManager = FindObjectOfType<Gridmanager>();
+        pathFinder = FindObjectOfType<NavigateNode>();
     }
 
     //functions that gets called as the class is enabled
     private void EnableFuntions()
     {
-        FindPath();
         StartPoint();
-        StartCoroutine(DisplayPath());
+        RecalculatePath(true);
     }
 
     //finds the waypoints tagged as the path and stores them in the list
-    private void FindPath()
+    private void RecalculatePath(bool resetPath)
     {
+        Vector2Int coordinates = CheckIfStart(resetPath);
+
+        StopAllCoroutines();
+
         path.Clear();
+        path = pathFinder.FindNewPath(coordinates);
 
-        GameObject pathParent = GameObject.FindGameObjectWithTag(Tags.TAGS_PATH);
+        StartCoroutine(DisplayPath());
+    }
 
-        foreach(Transform childTransform in pathParent.transform)
+    //see if it is the start coordinates, or new coordinates
+    private Vector2Int CheckIfStart(bool resetPath)
+    {
+        Vector2Int coordinates = new Vector2Int();
+
+        if (resetPath)
         {
-            Waypoint waypoint = childTransform.GetComponent<Waypoint>();
-
-            if (waypoint != null)
-            {
-                path.Add(waypoint);
-            }
+            coordinates = pathFinder.StartCoordinates;
+        }
+        else
+        {
+            coordinates = gridManager.GetCoordinatesFromPosition(transform.position);
         }
 
+        return coordinates;
     }
 
     //get the startposition where the enemies must spawn
     private void StartPoint()
     {
-        transform.position = path[0].transform.position;
+        transform.position = gridManager.GetPositionFromCoordinates(pathFinder.StartCoordinates);
     }
 
     //Let the enemy move from one tile to the next as set in the list
    IEnumerator DisplayPath()
     {
-        foreach(Waypoint waypoint in path)
+        for (int i = 1; i < path.Count; i++)
         {
             Vector3 startPos = transform.position;
-            Vector3 endPos = waypoint.transform.position;
+            Vector3 endPos = gridManager.GetPositionFromCoordinates(pathFinder.EndCoordinates);
             float travelpercent = lerpStart;
 
             transform.LookAt(endPos);
